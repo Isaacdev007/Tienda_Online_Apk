@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4CAF50</color>       <!-- Verde -->
+    <color name="colorSecondary">#FFC107</color>     <!-- Amarillo -->
+    <color name="colorBackground">#F5F5F5</color>    <!-- Gris claro -->
+    <color name="textColorPrimary">#212121</color>   <!-- Negro suave -->
+</resources>
