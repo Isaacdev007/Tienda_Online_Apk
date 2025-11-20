@@ -1,3 +1,51 @@
 <resources>
-    <string name="app_name">Tienda Online App</string>
+    <string name="app_name">Tienda Online</string>
+
+    <!-- Login -->
+    <string name="login_titulo">Bienvenido</string>
+    <string name="login_subtitulo">Inicia sesión para continuar</string>
+    <string name="login_correo_hint">Correo electrónico</string>
+    <string name="login_contrasena_hint">Contraseña</string>
+    <string name="login_btn">Iniciar sesión</string>
+    <string name="login_registro">¿No tienes cuenta? Regístrate</string>
+    <string name="login_olvidaste">¿Olvidaste tu contraseña?</string>
+
+    <!-- Registro -->
+    <string name="registro_titulo">Crear Cuenta</string>
+    <string name="registro_subtitulo">Únete a nuestra tienda</string>
+    <string name="registro_nombre_hint">Nombre completo</string>
+    <string name="registro_correo_hint">Correo electrónico</string>
+    <string name="registro_contrasena_hint">Contraseña</string>
+    <string name="registro_confirmar_hint">Confirmar contraseña</string>
+    <string name="registro_btn">Registrarse</string>
+    <string name="registro_ya_tienes">¿Ya tienes cuenta? Inicia sesión</string>
+
+    <!-- Productos -->
+    <string name="productos_titulo">Catálogo</string>
+    <string name="productos_subtitulo">Descubre nuestros productos</string>
+    <string name="productos_agregar">Agregar</string>
+    <string name="productos_ver_carrito">Ver Carrito</string>
+    <string name="productos_precio_formato">$%s</string>
+
+    <!-- Carrito -->
+    <string name="carrito_titulo">Mi Carrito</string>
+    <string name="carrito_vacio">Tu carrito está vacío</string>
+    <string name="carrito_cantidad">Cantidad: %d</string>
+    <string name="carrito_subtotal">Subtotal:</string>
+    <string name="carrito_total">Total:</string>
+    <string name="carrito_finalizar">Finalizar Compra</string>
+    <string name="carrito_continuar">Continuar Comprando</string>
+
+    <!-- Productos de ejemplo -->
+    <string name="producto1_nombre">Camiseta Deportiva</string>
+    <string name="producto1_precio">45.000</string>
+    <string name="producto1_descripcion">Camiseta deportiva de alta calidad</string>
+
+    <string name="producto2_nombre">Audífonos Bluetooth</string>
+    <string name="producto2_precio">80.000</string>
+    <string name="producto2_descripcion">Sonido premium inalámbrico</string>
+
+    <string name="producto3_nombre">Reloj Inteligente</string>
+    <string name="producto3_precio">250.000</string>
+    <string name="producto3_descripcion">Monitorea tu salud y actividad</string>
 </resources>

@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4CAF50</color>       <!-- Verde -->
-    <color name="colorSecondary">#FFC107</color>     <!-- Amarillo -->
-    <color name="colorBackground">#F5F5F5</color>    <!-- Gris claro -->
-    <color name="textColorPrimary">#212121</color>   <!-- Negro suave -->
+    <!-- Colores principales de la tienda -->
+    <color name="colorPrimary">#FF6B35</color>
+    <color name="colorPrimaryDark">#E85A2A</color>
+    <color name="colorSecondary">#004E89</color>
+    <color name="colorAccent">#F77F00</color>
+
+    <!-- Fondos -->
+    <color name="colorBackground">#F5F5F5</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorCardBackground">#FFFFFF</color>
+
+    <!-- Textos -->
+    <color name="colorTextPrimary">#212121</color>
+    <color name="colorTextSecondary">#757575</color>
+    <color name="colorTextHint">#9E9E9E</color>
+
+    <!-- Estados -->
+    <color name="colorSuccess">#4CAF50</color>
+    <color name="colorError">#F44336</color>
+    <color name="colorWarning">#FF9800</color>
+
+    <!-- Botones -->
+    <color name="colorButtonPrimary">#FF6B35</color>
+    <color name="colorButtonSecondary">#004E89</color>
+
+    <!-- Bordes y sombras -->
+    <color name="colorBorder">#E0E0E0</color>
+    <color name="colorShadow">#40000000</color>
 </resources>
