@@ -1,6 +1,7 @@
 package com.example.tiendaonlineapp
 
 import android.os.Bundle
+import android.content.Intent
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
@@ -124,7 +125,11 @@ class CarritoActivity : AppCompatActivity() {
     /**
      * Crea una card visual para cada producto del carrito
      */
-    private fun crearCardProducto(item: CarritoItem, producto: Producto, subtotal: Double): CardView {
+    private fun crearCardProducto(
+        item: CarritoItem,
+        producto: Producto,
+        subtotal: Double
+    ): CardView {
         val cardView = CardView(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -184,9 +189,10 @@ class CarritoActivity : AppCompatActivity() {
             textSize = 18f
             setTypeface(null, android.graphics.Typeface.BOLD)
             gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                marginEnd = 8
-            }
+            layoutParams =
+                LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    marginEnd = 8
+                }
         }
 
         // Botón aumentar (+)
@@ -410,17 +416,35 @@ class CarritoActivity : AppCompatActivity() {
     private fun finalizarCompra(usuarioId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // Preparar datos para la pantalla de confirmación
+                val productosNombres = arrayListOf<String>()
+                val productosCantidades = arrayListOf<Int>()
+                val productosPrecios = arrayListOf<String>()
+                var totalCompra = 0.0
+
+                for (item in itemsCarrito) {
+                    val producto = database.productoDao().obtenerPorId(item.producto_id)
+                    if (producto != null) {
+                        productosNombres.add(producto.nombre)
+                        productosCantidades.add(item.cantidad)
+                        val subtotal = producto.precio * item.cantidad
+                        productosPrecios.add("$${"%,.0f".format(subtotal)}")
+                        totalCompra += subtotal
+                    }
+                }
+
                 // Vaciar el carrito del usuario
                 database.carritoDao().eliminarPorUsuario(usuarioId)
 
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@CarritoActivity,
-                        "¡Compra realizada con éxito!",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    // Volver a la pantalla anterior
+                    // Ir a la pantalla de confirmación
+                    val intent =
+                        Intent(this@CarritoActivity, ConfirmacionCompraActivity::class.java)
+                    intent.putStringArrayListExtra("productos_nombres", productosNombres)
+                    intent.putIntegerArrayListExtra("productos_cantidades", productosCantidades)
+                    intent.putStringArrayListExtra("productos_precios", productosPrecios)
+                    intent.putExtra("total", totalCompra)
+                    startActivity(intent)
                     finish()
                 }
             } catch (e: Exception) {
