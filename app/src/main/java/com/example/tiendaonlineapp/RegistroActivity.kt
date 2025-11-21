@@ -6,8 +6,14 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.tiendaonlineapp.database.AppDatabase
+import com.example.tiendaonlineapp.database.Usuario
 import com.example.tiendaonlineapp.utils.ValidationUtils
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegistroActivity : AppCompatActivity() {
 
@@ -18,9 +24,14 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var btnRegistrarse: Button
     private lateinit var tvVolverLogin: TextView
 
+    private lateinit var database: AppDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
+
+        // Inicializar base de datos
+        database = AppDatabase.getDatabase(this)
 
         // Referencias a elementos
         etNombre = findViewById(R.id.etNombre)
@@ -38,12 +49,7 @@ class RegistroActivity : AppCompatActivity() {
             val confirmar = etConfirmar.text.toString()
 
             if (validarCampos(nombre, correo, contrasena, confirmar)) {
-                // Si las validaciones pasan, mostrar mensaje y volver al login
-                Toast.makeText(this, "¡Registro exitoso! Ahora puedes iniciar sesión", Toast.LENGTH_LONG).show()
-
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
+                registrarUsuario(nombre, correo, contrasena)
             }
         }
 
@@ -52,6 +58,64 @@ class RegistroActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
+        }
+    }
+
+    /**
+     * Registra un nuevo usuario en la base de datos
+     */
+    private fun registrarUsuario(nombre: String, correo: String, contrasena: String) {
+        // Deshabilitar botón mientras se procesa
+        btnRegistrarse.isEnabled = false
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Verificar si el correo ya existe
+                val usuarioExistente = database.usuarioDao().buscarPorCorreo(correo)
+
+                withContext(Dispatchers.Main) {
+                    if (usuarioExistente != null) {
+                        // El correo ya está registrado
+                        Toast.makeText(
+                            this@RegistroActivity,
+                            "Este correo ya está registrado",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        btnRegistrarse.isEnabled = true
+                    } else {
+                        // Crear nuevo usuario
+                        val nuevoUsuario = Usuario(
+                            nombre = nombre,
+                            correo = correo,
+                            contrasena = contrasena
+                        )
+
+                        // Insertar en la base de datos
+                        database.usuarioDao().insertar(nuevoUsuario)
+
+                        // Mostrar mensaje de éxito
+                        Toast.makeText(
+                            this@RegistroActivity,
+                            "¡Registro exitoso! Ahora puedes iniciar sesión",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        // Ir al Login
+                        val intent = Intent(this@RegistroActivity, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@RegistroActivity,
+                        "Error al registrar: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    btnRegistrarse.isEnabled = true
+                }
+            }
         }
     }
 
@@ -127,7 +191,6 @@ class RegistroActivity : AppCompatActivity() {
             return false
         }
 
-        // Todas las validaciones pasaron
         return true
     }
 }

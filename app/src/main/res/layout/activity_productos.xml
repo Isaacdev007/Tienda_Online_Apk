@@ -118,6 +118,7 @@
                             android:layout_marginBottom="12dp"/>
 
                         <Button
+                            android:id="@+id/btnAgregarProducto1"
                             style="@style/SecondaryButtonStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
@@ -196,6 +197,7 @@
                             android:layout_marginBottom="12dp"/>
 
                         <Button
+                            android:id="@+id/btnAgregarProducto3"
                             style="@style/SecondaryButtonStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
@@ -274,6 +276,7 @@
                             android:layout_marginBottom="12dp"/>
 
                         <Button
+                            android:id="@+id/btnAgregarProducto2"
                             style="@style/SecondaryButtonStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"

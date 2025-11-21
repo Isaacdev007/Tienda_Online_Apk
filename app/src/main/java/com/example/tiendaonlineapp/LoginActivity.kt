@@ -6,8 +6,14 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.tiendaonlineapp.database.AppDatabase
+import com.example.tiendaonlineapp.utils.SessionManager
 import com.example.tiendaonlineapp.utils.ValidationUtils
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
 
@@ -16,9 +22,22 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var btnLogin: Button
     private lateinit var tvRegistro: TextView
 
+    private lateinit var database: AppDatabase
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        // Inicializar base de datos y sesión
+        database = AppDatabase.getDatabase(this)
+        sessionManager = SessionManager(this)
+
+        // Verificar si ya hay sesión activa
+        if (sessionManager.estaLogueado()) {
+            irAProductos()
+            return
+        }
 
         // Referencias a los elementos del XML
         etCorreo = findViewById(R.id.etCorreo)
@@ -32,11 +51,7 @@ class LoginActivity : AppCompatActivity() {
             val contrasena = etContrasena.text.toString()
 
             if (validarCampos(correo, contrasena)) {
-                // Si las validaciones pasan, ir a ProductosActivity
-                Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, ProductosActivity::class.java)
-                startActivity(intent)
-                finish()
+                iniciarSesion(correo, contrasena)
             }
         }
 
@@ -44,6 +59,53 @@ class LoginActivity : AppCompatActivity() {
         tvRegistro.setOnClickListener {
             val intent = Intent(this, RegistroActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    /**
+     * Inicia sesión verificando credenciales en la base de datos
+     */
+    private fun iniciarSesion(correo: String, contrasena: String) {
+        // Deshabilitar botón mientras se procesa
+        btnLogin.isEnabled = false
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Buscar usuario en la base de datos
+                val usuario = database.usuarioDao().buscarPorCorreoYContrasena(correo, contrasena)
+
+                withContext(Dispatchers.Main) {
+                    if (usuario != null) {
+                        // Credenciales correctas
+                        sessionManager.guardarSesion(usuario.id, usuario.nombre)
+
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "¡Bienvenido ${usuario.nombre}!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        irAProductos()
+                    } else {
+                        // Credenciales incorrectas
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Correo o contraseña incorrectos",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        btnLogin.isEnabled = true
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Error al iniciar sesión: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    btnLogin.isEnabled = true
+                }
+            }
         }
     }
 
@@ -83,7 +145,15 @@ class LoginActivity : AppCompatActivity() {
             return false
         }
 
-        // Todas las validaciones pasaron
         return true
+    }
+
+    /**
+     * Navega a la pantalla de productos
+     */
+    private fun irAProductos() {
+        val intent = Intent(this, ProductosActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
