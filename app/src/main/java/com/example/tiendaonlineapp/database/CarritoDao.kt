@@ -28,4 +28,31 @@ interface CarritoDao {
 
     @Query("SELECT COUNT(*) FROM carrito WHERE usuario_id = :usuarioId")
     suspend fun contarItems(usuarioId: Int): Int
+
+    // ⭐ NUEVAS FUNCIONES
+
+    /**
+     * Elimina un item específico del carrito
+     */
+    @Query("DELETE FROM carrito WHERE id = :itemId")
+    suspend fun eliminarItem(itemId: Int)
+
+    /**
+     * Aumenta la cantidad de un item en 1
+     */
+    @Query("UPDATE carrito SET cantidad = cantidad + 1 WHERE id = :itemId")
+    suspend fun aumentarCantidad(itemId: Int)
+
+    /**
+     * Disminuye la cantidad de un item en 1
+     * Si la cantidad llega a 0, el item se elimina automáticamente
+     */
+    @Query("UPDATE carrito SET cantidad = cantidad - 1 WHERE id = :itemId AND cantidad > 1")
+    suspend fun disminuirCantidad(itemId: Int): Int
+
+    /**
+     * Obtiene la cantidad actual de un item
+     */
+    @Query("SELECT cantidad FROM carrito WHERE id = :itemId")
+    suspend fun obtenerCantidad(itemId: Int): Int?
 }

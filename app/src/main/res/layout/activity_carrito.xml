@@ -32,7 +32,7 @@
     </LinearLayout>
 
     <!-- Contenedor de productos -->
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollViewCarrito"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -43,151 +43,12 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/containerProductos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"/>
 
-            <!-- Producto 1 en el carrito -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:layout_marginBottom="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:cardCornerRadius="12dp"
-                        android:layout_marginEnd="12dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/ic_launcher_foreground"
-                            android:background="#E3F2FD"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="Producto"/>
-
-                    </androidx.cardview.widget.CardView>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Reloj inteligente"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:textColor="@color/colorTextPrimary"
-                            android:layout_marginBottom="4dp"/>
-
-                        <TextView
-                            style="@style/PriceTextStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$250.000"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="4dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/carrito_cantidad"
-                            android:textSize="14sp"
-                            android:textColor="@color/colorTextSecondary"
-                            tools:text="Cantidad: 1"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Producto 2 en el carrito -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:layout_marginBottom="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:cardCornerRadius="12dp"
-                        android:layout_marginEnd="12dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/ic_launcher_foreground"
-                            android:background="#E8F5E9"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="Producto"/>
-
-                    </androidx.cardview.widget.CardView>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Audífonos Bluetooth"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:textColor="@color/colorTextPrimary"
-                            android:layout_marginBottom="4dp"/>
-
-                        <TextView
-                            style="@style/PriceTextStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$80.000"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="4dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/carrito_cantidad"
-                            android:textSize="14sp"
-                            android:textColor="@color/colorTextSecondary"
-                            tools:text="Cantidad: 1"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Card de resumen y botón -->
     <androidx.cardview.widget.CardView
@@ -225,9 +86,10 @@
                     android:textColor="@color/colorTextPrimary"/>
 
                 <TextView
+                    android:id="@+id/tvTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$330.000"
+                    android:text="$0"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"/>
