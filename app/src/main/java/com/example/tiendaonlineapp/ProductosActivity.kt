@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.tiendaonlineapp.database.AppDatabase
 import com.example.tiendaonlineapp.database.CarritoItem
 import com.example.tiendaonlineapp.database.Producto
@@ -17,6 +18,7 @@ import kotlinx.coroutines.withContext
 class ProductosActivity : AppCompatActivity() {
 
     private lateinit var btnVerCarrito: Button
+    private lateinit var btnCerrarSesion: Button
     private lateinit var btnAgregarProducto1: Button
     private lateinit var btnAgregarProducto2: Button
     private lateinit var btnAgregarProducto3: Button
@@ -36,6 +38,7 @@ class ProductosActivity : AppCompatActivity() {
 
         // Referencias
         btnVerCarrito = findViewById(R.id.btnVerCarrito)
+        btnCerrarSesion = findViewById(R.id.btnCerrarSesion)
         btnAgregarProducto1 = findViewById(R.id.btnAgregarProducto1)
         btnAgregarProducto2 = findViewById(R.id.btnAgregarProducto2)
         btnAgregarProducto3 = findViewById(R.id.btnAgregarProducto3)
@@ -53,11 +56,74 @@ class ProductosActivity : AppCompatActivity() {
             val intent = Intent(this, CarritoActivity::class.java)
             startActivity(intent)
         }
+
+        // Botón cerrar sesión
+        btnCerrarSesion.setOnClickListener {
+            mostrarDialogoCerrarSesion()
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        // Renovar sesión cada vez que la actividad esté visible
+        sessionManager.renovarSesion()
         actualizarContadorCarrito()
+    }
+
+    /**
+     * Muestra diálogo de confirmación para cerrar sesión
+     */
+    private fun mostrarDialogoCerrarSesion() {
+        AlertDialog.Builder(this)
+            .setTitle("Cerrar Sesión")
+            .setMessage("¿Estás seguro de que deseas cerrar sesión?\n\nSe vaciará tu carrito de compras.")
+            .setPositiveButton("Sí, cerrar") { dialog, _ ->
+                cerrarSesion()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    /**
+     * Cierra la sesión y vacía el carrito
+     */
+    private fun cerrarSesion() {
+        val usuarioId = sessionManager.obtenerUsuarioId()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Vaciar carrito del usuario
+                database.carritoDao().eliminarPorUsuario(usuarioId)
+
+                withContext(Dispatchers.Main) {
+                    // Cerrar sesión
+                    sessionManager.cerrarSesion()
+
+                    Toast.makeText(
+                        this@ProductosActivity,
+                        "Sesión cerrada correctamente",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    // Ir al Login y limpiar el stack de actividades
+                    val intent = Intent(this@ProductosActivity, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@ProductosActivity,
+                        "Error al cerrar sesión: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     /**

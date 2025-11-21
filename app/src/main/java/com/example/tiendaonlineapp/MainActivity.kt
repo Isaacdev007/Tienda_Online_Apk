@@ -21,22 +21,23 @@ class MainActivity : AppCompatActivity() {
         // Simular splash screen por 2 segundos
         Handler(Looper.getMainLooper()).postDelayed({
             verificarSesionYRedirigir()
-        }, 2000) // 2 segundos de espera
+        }, 2000)
     }
 
     /**
-     * Verifica si hay sesión activa y redirige apropiadamente
+     * Verifica si hay sesión activa y válida
+     * estaLogueado() ahora valida automáticamente el tiempo
      */
     private fun verificarSesionYRedirigir() {
         val intent = if (sessionManager.estaLogueado()) {
-            // Si hay sesión activa → ir directo a Productos
+            // Sesión válida y dentro del tiempo permitido
             Intent(this, ProductosActivity::class.java)
         } else {
-            // Si no hay sesión → ir a Login
+            // Sin sesión o sesión expirada
             Intent(this, LoginActivity::class.java)
         }
 
         startActivity(intent)
-        finish() // Cerrar MainActivity para que no se pueda volver con botón atrás
+        finish()
     }
 }
